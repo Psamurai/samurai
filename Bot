@@ -1,0 +1,781 @@
+<?php
+ob_start();
+define('API_KEY',"token"); 2022/04/06 19:025113971009:AAGF-CiPFiWCPbuyo8Lnx2tCd8uphLmTv0s //
+
+function bot($method,$datas=[]){
+    $url = "https://api.telegram.org/bot".API_KEY."/".$method;
+    $ch = curl_init();
+    curl_setopt($ch,CURLOPT_URL,$url);
+    curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
+    curl_setopt($ch,CURLOPT_POSTFIELDS,($datas));
+    $res = curl_exec($ch);
+    if(curl_error($ch)){
+        var_dump(curl_error($ch));
+    }else{
+        return json_decode($res);
+    }
+}
+
+$up=json_decode(file_get_contents('php://input'));
+if(!file_exists("panel.json")){
+  file_put_contents("time.json","");
+  file_put_contents("panel.json","");
+  mkdir("data");
+  $panel = json_decode(file_get_contents("panel.json"),true);
+  $panel["textlink"]=10;
+  $panel["callback"]=10;
+  $panel["id"]=5;
+  $panel["link"]=30;
+  $panel["text"]=3;
+  $panel["adforw"]=15;
+  $panel["vaziat"]="empty";
+  $panel["edit"]="on";
+  file_put_contents("panel.json",json_encode($panel));
+}
+$sudo = -1001085677688; @mr_raper //
+$admin = 998117395; @dj_next //  
+if(isset($up->message)){
+  $msg_id = $up->message->message_id;
+  $chat_id = $up->message->chat->id;
+  $from_id = $up->message->from->id;
+  $first_name = $up->message->from->first_name;
+  if($chat_id == $sudo){
+    $tims = file_get_contents("https://api.codebazan.ir/time-date/?td=date");
+    if(!strstr(file_get_contents("data.txt"),"$tims")){
+      file_put_contents("data.txt","\n$tims");
+    }
+    $timer = substr(date("s"),0,1);
+    $time = json_decode(file_get_contents("time.json"),true);
+    if(isset($time["$timer"])){
+      $send = $time["$timer"]["$from_id"];
+      if($send < 3){
+        $time["$timer"]["$from_id"]=$send+1;
+        file_put_contents("time.json",json_encode($time));
+      }elseif($send == 5){
+        bot('restrictChatMember',[
+          'user_id'=>$from_id,
+          'chat_id'=>$chat_id,
+          'can_post_messages'=>false,
+          'until_date'=> time() + (7200)
+        ]);
+        var_dump(bot('deletemessage',[
+          "chat_id"=>$chat_id,
+          "message_id"=>$msg_id
+        ]));
+        var_dump(bot("sendmessage",[
+          "chat_id"=> $admin,
+          "text"=>"🔘  [$first_name عزیز](tg://user?id=$from_id) رعایت نکرد چکارش کنم",
+          "parse_mode"=>"markdown",
+          "reply_markup"=>json_encode(["inline_keyboard"=>[[["text"=>"ریمو","callback_data"=>"remo$from_id"],["text"=>"بازش کن","callback_data"=>"velsh$from_id"]],[["text"=>"زندان","callback_data"=>"hors$from_id"]]]])
+        ]));
+        $send = bot("sendmessage",[
+          "chat_id"=>$chat_id,
+          "text"=>"🔘  [$first_name عزیز](tg://user?id=$from_id) متاسفانه شما با این همه اخطار باز هم رعایت نکردید و 2 ساعت محدود به ارسال پیام شدید\nگذارش شما به شورای مصلحت گرو داده شده درصورت تشخیص مصلحت گروه توسط یکی از ادمیمن ها محدودیت زود تر به پایان میرسد و درصورت تشخیض متضرر بودن به اشد مجازات از گروه خارج میشوید",
+          "parse_mode"=>"markdown",
+          "reply_markup"=>json_encode(["inline_keyboard"=>[[["text"=>"گروه های ناب مذهبی","url"=>"https://t.me/linkstm/4"]]]])
+        ])->result->message_id;
+        sleep(5);
+        var_dump(bot('deletemessage',[
+          "chat_id"=>$chat_id,
+          "message_id"=>$send
+        ]));
+      }else{
+        var_dump(bot('deletemessage',[
+            "chat_id"=>$chat_id,
+            "message_id"=>$msg_id
+          ]));
+          $time["$timer"]["$from_id"]=$send+1;
+          file_put_contents("time.json",json_encode($time));
+        $send = bot("sendmessage",[
+          "chat_id"=>$chat_id,
+          "text"=>"🔘  [$first_name عزیز](tg://user?id=$from_id) اخطار\nشما $send پیام گذاشتی داخل گروه یکم صبر کن\nدر صورت تکرار محبور به خداحافطی میشویم",
+          "parse_mode"=>"markdown",
+          "reply_markup"=>json_encode(["inline_keyboard"=>[[["text"=>"گروه های ناب مذهبی","url"=>"https://t.me/linkstm/4"]]]])
+        ])->result->message_id;
+        sleep(5);
+        var_dump(bot('deletemessage',[
+          "chat_id"=>$chat_id,
+          "message_id"=>$send
+        ]));
+      }
+    }else{
+      $times["$timer"]["$from_id"]=0;
+      file_put_contents("time.json",json_encode($times));
+    }
+    $text = $up->message->text;
+    $first_name = $up->message->from->first_name;
+    $last_name = $up->message->from->last_name;
+    $username = $up->message->from->username;
+    if(!file_exists("data/$from_id.txt")){
+      file_put_contents("data/$from_id.txt","");
+    }
+    $adds = count(file("data/$from_id.txt"));
+    $panel = json_decode(file_get_contents("panel.json"),true);
+    $addtextlink = $panel["textlink"];
+    $addcallback = $panel["callback"];
+    $addid = $panel["id"];
+    $addlink = $panel["link"];
+    $textad = $panel["text"];
+    $adforw = $panel["adforw"];
+    if(isset($up->message->new_chat_member)){
+      @$update = json_decode(file_get_contents('php://input'),true);
+      @$message = $update["message"];
+      foreach($message["new_chat_members"] as $item){
+        $add = $item["id"];
+        if($item["is_bot"]){
+          var_dump(bot('KickChatMember',[
+            'chat_id'=>$chat_id,
+            'user_id'=>$from_id
+          ]));
+          var_dump(bot('KickChatMember',[
+            'chat_id'=>$chat_id,
+            'user_id'=>$add
+          ]));
+          var_dump(bot('deletemessage',[
+            "chat_id"=>$chat_id,
+            "message_id"=>$msg_id
+          ]));
+        }else{
+          if(!file_exists("data/$from_id.txt")){
+            file_put_contents("data/$from_id.txt","\n$add");
+          }else{
+            $firstname = $item["first_name"];
+            $send = bot("sendmessage",[
+                "chat_id"=>$chat_id,
+                "text"=>"🔘 سلام[$firstname عزیز](tg://user?id=$from_id)به گروه خودتون خوش آمدید عزیز 🌷🌸\nبرای ارسال پیام باید $textad نفر از دوستات رو به گروه دعوت کنید",
+                "parse_mode"=>"markdown",
+                "reply_markup"=>json_encode(["inline_keyboard"=>[[["text"=>"گروه های ناب مذهبی","url"=>"https://t.me/linkstm/4"]]]])
+              ])->result->message_id;
+            if(!strstr(file_get_contents("data/$from_id.txt"),"$add")){
+              $file=fopen("data/$from_id.txt","a");
+              fwrite($file,"\n$add");
+              fclose($file);
+            }
+          }
+          var_dump(bot('deletemessage',[
+            "chat_id"=>$chat_id,
+            "message_id"=>$msg_id
+          ]));
+          sleep(7);
+          var_dump(bot('deletemessage',[
+            "chat_id"=>$chat_id,
+            "message_id"=>$send
+          ]));
+        }
+      }
+    }elseif(isset($up->message->forward_from_chat)){
+      if($adds < $adforw){
+        var_dump(bot('deletemessage',[
+            "chat_id"=>$chat_id,
+            "message_id"=>$msg_id
+        ]));
+        $send = bot("sendmessage",[
+          "chat_id"=>$sudo,
+          "text"=>"🔘 [$first_name $last_name $username](tg://user?id=$from_id) برای فروارد کردن باید $adforw نفر را به گروه دعوت کنی تعداد دعوت های شما\n$adds",
+          "parse_mode"=>"markdown",
+          "reply_markup"=>json_encode(["inline_keyboard"=>[[["text"=>"گروه های ناب مذهبی","url"=>"https://t.me/linkstm/4"]],[["text"=>"معاف","callback_data"=>"moftiforw$from_id"]]]])
+        ])->result->message_id;
+        sleep(8);
+        var_dump(bot('deletemessage',[
+          "chat_id"=>$chat_id,
+          "message_id"=>$send
+        ]));
+      }else{
+        $id = $up->message->forward_from_chat->id;
+        $mid = $up->message->forward_from_message_id;
+        if(!strstr(file_get_contents("data.txt"),"$mid $id")){
+          $file=fopen("data.txt","a");
+          fwrite($file,"\n$mid $id");
+          fclose($file);
+        }else{
+          var_dump(bot('deletemessage',[
+              "chat_id"=>$chat_id,
+              "message_id"=>$msg_id
+          ]));
+          $send = bot("sendmessage",[
+            "chat_id"=>$chat_id,
+            "text"=>"🔘  [$first_name عزیز](tg://user?id=$from_id)\n مطلب شما امروز یک بار در گروه قرار گرفته است لطفا از گذاشتن مطالب تکراری خودداری کنید\nدر صورت تکرار محبور به خداحافطی میشویم",
+            "parse_mode"=>"markdown",
+            "reply_markup"=>json_encode(["inline_keyboard"=>[[["text"=>"گروه های ناب مذهبی","url"=>"https://t.me/linkstm/4"]]]])
+          ])->result->message_id;
+          sleep(7);
+          var_dump(bot('deletemessage',[
+            "chat_id"=>$chat_id,
+            "message_id"=>$send
+          ]));
+        }
+      }
+    }elseif($up->message->entities[0]->type == "text_link"){
+      if($adds < $addtextlink){
+        var_dump(bot('deletemessage',[
+          "chat_id"=>$chat_id,
+          "message_id"=>$msg_id
+        ]));
+        $send = bot("sendmessage",[
+              "chat_id"=>$sudo,
+              "text"=>"🔘 [$first_name $last_name $username](tg://user?id=$from_id) برای ارسال متن لینک دار باید $addtextlink نفر را به گروه دعوت کنی تعداد دعوت های شما\n$adds",
+              "parse_mode"=>"markdown",
+              "reply_markup"=>json_encode(["inline_keyboard"=>[[["text"=>"گروه های ناب مذهبی","url"=>"https://t.me/linkstm/4"]],[["text"=>"معاف","callback_data"=>"moftilinktxt$from_id"]]]])
+            ])->result->message_id;
+        sleep(5);
+        var_dump(bot('deletemessage',[
+          "chat_id"=>$chat_id,
+          "message_id"=>$send
+        ]));
+      }else{
+        $text = $up->message->text;
+        if(!strstr(file_get_contents("data.txt"),"$text")){
+            $file=fopen("data.txt","a");
+            fwrite($file,"\n$text");
+            fclose($file);
+        }else{
+            var_dump(bot('deletemessage',[
+              "chat_id"=>$chat_id,
+              "message_id"=>$msg_id
+            ]));
+            $send = bot("sendmessage",[
+              "chat_id"=>$chat_id,
+              "text"=>"🔘  [$first_name عزیز](tg://user?id=$from_id)\n مطلب شما امروز یک بار در گروه قرار گرفته است لطفا از گذاشتن مطالب تکراری خودداری کنید\nدر صورت تکرار محبور به خداحافطی میشویم",
+              "parse_mode"=>"markdown",
+              "reply_markup"=>json_encode(["inline_keyboard"=>[[["text"=>"گروه های ناب مذهبی","url"=>"https://t.me/linkstm/4"]]]])
+            ])->result->message_id;
+            sleep(5);
+            var_dump(bot('deletemessage',[
+              "chat_id"=>$chat_id,
+              "message_id"=>$send
+            ]));
+        }
+      }
+    }elseif($up->message->reply_markup){
+      if($adds < $addcallback){
+        var_dump(bot('deletemessage',[
+          "chat_id"=>$chat_id,
+          "message_id"=>$msg_id
+        ]));
+        $send = bot("sendmessage",[
+              "chat_id"=>$sudo,
+              "text"=>"🔘 [$first_name $last_name $username](tg://user?id=$from_id) برای ارسال متن دکمه شیشه ای  باید $addcallback نفر را به گروه دعوت کنی تعداد دعوت های شما\n$adds",
+              "parse_mode"=>"markdown",
+              "reply_markup"=>json_encode(["inline_keyboard"=>[[["text"=>"گروه های ناب مذهبی","url"=>"https://t.me/linkstm/4"]],[["text"=>"معاف","callback_data"=>"moftilinksh$from_id"]]]])
+            ])->result->message_id;
+        sleep(5);
+        var_dump(bot('deletemessage',[
+          "chat_id"=>$chat_id,
+          "message_id"=>$send
+        ]));
+      }else{
+        $text = preg_replace('/[^\p{Arabic}\da-z-]/ui', '', $text);
+        if(!strstr(file_get_contents("data.txt"),"$text")){
+            $file=fopen("data.txt","a");
+            fwrite($file,"\n$text");
+            fclose($file);
+        }else{
+            var_dump(bot('deletemessage',[
+              "chat_id"=>$chat_id,
+              "message_id"=>$msg_id
+            ]));
+            $send = bot("sendmessage",[
+              "chat_id"=>$chat_id,
+              "text"=>"🔘  [$first_name عزیز](tg://user?id=$from_id)\n مطلب شما امروز یک بار در گروه قرار گرفته است لطفا از گذاشتن مطالب تکراری خودداری کنید\nدر صورت تکرار محبور به خداحافطی میشویم",
+              "parse_mode"=>"markdown",
+              "reply_markup"=>json_encode(["inline_keyboard"=>[[["text"=>"گروه های ناب مذهبی","url"=>"https://t.me/linkstm/4"]]]])
+            ])->result->message_id;
+            sleep(7);
+            var_dump(bot('deletemessage',[
+              "chat_id"=>$chat_id,
+              "message_id"=>$send
+            ]));
+        }
+      }
+    }elseif(isset($up->message->text)){
+      if($adds < $textad){
+        var_dump(bot('deletemessage',[
+          "chat_id"=>$chat_id,
+          "message_id"=>$msg_id
+        ]));
+        $send = bot("sendmessage",[
+          "chat_id"=>$sudo,
+          "text"=>"🔘 [$first_name $last_name $username](tg://user?id=$from_id)\nلطفا $textad نفر رو به گروه اضافه کن تا بتونی پیام بدی\nاین کار بخاطر جلوگیری از ربات های مزاحم است\nتعداد افرادی که ادد کردی:\n$adds",
+          "parse_mode"=>"markdown",
+          "reply_markup"=>json_encode(["inline_keyboard"=>[[["text"=>"گروه های ناب مذهبی","url"=>"https://t.me/linkstm/4"]],[["text"=>"معاف","callback_data"=>"mofti1$from_id"]]]])
+        ])->result->message_id;
+        sleep(5);
+        var_dump(bot('deletemessage',[
+          "chat_id"=>$chat_id,
+          "message_id"=>$send
+        ]));
+      }
+      if(preg_match("/@/", $text)){
+        if($adds < $addid){
+          var_dump(bot('deletemessage',[
+              "chat_id"=>$chat_id,
+              "message_id"=>$msg_id
+          ]));
+          $send = bot("sendmessage",[
+            "chat_id"=>$sudo,
+            "text"=>"🔘 [$first_name $last_name $username](tg://user?id=$from_id) برای ارسال ایدی باید $addid نفر را به گروه دعوت کنی تعداد دعوت های شما\n$adds",
+            "parse_mode"=>"markdown",
+            "reply_markup"=>json_encode(["inline_keyboard"=>[[["text"=>"گروه های ناب مذهبی","url"=>"https://t.me/linkstm/4"]],[["text"=>"معاف","callback_data"=>"moftiads$from_id"]]]])
+          ])->result->message_id;
+          sleep(5);
+          var_dump(bot('deletemessage',[
+            "chat_id"=>$chat_id,
+            "message_id"=>$send
+          ]));
+        }else{
+          $text = preg_replace('/[^\p{Arabic}\da-z-]/ui', '', $text);
+          if(!strstr(file_get_contents("data.txt"),"$text")){
+            $file=fopen("data.txt","a");
+            fwrite($file,"\n$text");
+            fclose($file);
+          }else{
+            var_dump(bot('deletemessage',[
+              "chat_id"=>$chat_id,
+              "message_id"=>$msg_id
+            ]));
+            $send = bot("sendmessage",[
+              "chat_id"=>$chat_id,
+              "text"=>"🔘  [$first_name عزیز](tg://user?id=$from_id)\n مطلب شما امروز یک بار در گروه قرار گرفته است لطفا از گذاشتن مطالب تکراری خودداری کنید\nدر صورت تکرار محبور به خداحافطی میشویم",
+              "parse_mode"=>"markdown",
+              "reply_markup"=>json_encode(["inline_keyboard"=>[[["text"=>"گروه های ناب مذهبی","url"=>"https://t.me/linkstm/4"]]]])
+            ])->result->message_id;
+            sleep(7);
+            var_dump(bot('deletemessage',[
+              "chat_id"=>$chat_id,
+              "message_id"=>$send
+            ]));
+          }
+        }
+      }elseif(preg_match("/[Tt].[Mm][Ee]/", $text)){
+        if($adds < $addlink){
+          var_dump(bot('deletemessage',[
+              "chat_id"=>$chat_id,
+              "message_id"=>$msg_id
+          ]));
+          $send = bot("sendmessage",[
+            "chat_id"=>$sudo,
+            "text"=>"🔘 [$first_name $last_name $username](tg://user?id=$from_id) برای ارسال لینک باید $addlink نفر را به گروه دعوت کنی تعداد دعوت های شما\n$adds",
+            "parse_mode"=>"markdown",
+            "reply_markup"=>json_encode(["inline_keyboard"=>[[["text"=>"گروه های ناب مذهبی","url"=>"https://t.me/linkstm/4"]],[["text"=>"معاف","callback_data"=>"moftilinktk$from_id"]]]])
+          ])->result->message_id;
+          sleep(6);
+          var_dump(bot('deletemessage',[
+            "chat_id"=>$chat_id,
+            "message_id"=>$send
+          ]));
+        }else{
+          $text = preg_replace('/[^\p{Arabic}\da-z-]/ui', '', $text);
+          if(!strstr(file_get_contents("data.txt"),"$text")){
+            $file=fopen("data.txt","a");
+            fwrite($file,"\n$text");
+            fclose($file);
+          }else{
+            var_dump(bot('deletemessage',[
+              "chat_id"=>$chat_id,
+              "message_id"=>$msg_id
+            ]));
+            $send = bot("sendmessage",[
+              "chat_id"=>$chat_id,
+              "text"=>"🔘  [$first_name عزیز](tg://user?id=$from_id)\n مطلب شما امروز یک بار در گروه قرار گرفته است لطفا از گذاشتن مطالب تکراری خودداری کنید\nدر صورت تکرار محبور به خداحافطی میشویم",
+              "parse_mode"=>"markdown",
+              "reply_markup"=>json_encode(["inline_keyboard"=>[[["text"=>"گروه های ناب مذهبی","url"=>"https://t.me/linkstm/4"]]]])
+            ])->result->message_id;
+            sleep(7);
+            var_dump(bot('deletemessage',[
+              "chat_id"=>$chat_id,
+              "message_id"=>$send
+            ]));
+          }
+        }
+      }elseif($text == "آمار" and $from_id == $admin){
+        $addsd = scandir('data');
+        $addd = 0;
+        foreach($addsd as $item){
+          $addd = count(file("data/$item")) + $addd;
+        }
+       var_dump(bot("sendmessage",[
+         "chat_id"=>$chat_id,
+         "text"=>"📊 تعداد ادد (دعوت) کردن به گروه*$addd* نفر میباشد👌",
+         "parse_mode"=>"markdown",
+         "reply_markup"=>json_encode(["inline_keyboard"=>[[["text"=>"کانال","url"=>"http://t.me/MB313"],["text"=>"گروه","url"=>"http://t.me/Marasem_m"],["text"=>"ادمین","url"=>"http://t.me/P1000"]],[["text"=>"ربات","url"=>"http://t.me/khademgapbot"]]]])
+       ]));
+     }
+    }else{
+      $caption = $up->message->caption;
+      if($adds < $textad){
+        var_dump(bot('deletemessage',[
+          "chat_id"=>$chat_id,
+          "message_id"=>$msg_id
+        ]));
+        $send = bot("sendmessage",[
+          "chat_id"=>$sudo,
+          "text"=>"🔘 [$first_name $last_name $username](tg://user?id=$from_id)\nلطفا $textad نفر رو به گروه اضافه کن تا بتونی پیام بدی\nاین کار بخاطر جلوگیری از ربات های مزاحم است\nتعداد افرادی که ادد کردی:\n$adds",
+          "parse_mode"=>"markdown",
+          "reply_markup"=>json_encode(["inline_keyboard"=>[[["text"=>"گروه های ناب مذهبی","url"=>"https://t.me/linkstm/4"]],[["text"=>"معاف","callback_data"=>"mofti1$from_id"]]]])
+        ])->result->message_id;
+        sleep(5);
+        var_dump(bot('deletemessage',[
+          "chat_id"=>$chat_id,
+          "message_id"=>$send
+        ]));
+      }elseif(preg_match("/@/", $caption)){
+        if($adds < $addid){
+          var_dump(bot('deletemessage',[
+            "chat_id"=>$chat_id,
+            "message_id"=>$msg_id
+          ]));
+          $send = bot("sendmessage",[
+          "chat_id"=>$sudo,
+          "text"=>"🔘 [$first_name $last_name $username](tg://user?id=$from_id) برای ارسال ایدی باید $addid نفر را به گروه دعوت کنی تعداد دعوت های شما\n$adds",
+          "parse_mode"=>"markdown",
+          "reply_markup"=>json_encode(["inline_keyboard"=>[[["text"=>"گروه های ناب مذهبی","url"=>"https://t.me/linkstm/4"]],[["text"=>"معاف","callback_data"=>"moftiads$from_id"]]]])
+          ])->result->message_id;
+          sleep(5);
+          var_dump(bot('deletemessage',[
+            "chat_id"=>$chat_id,
+            "message_id"=>$send
+          ]));
+        }else{
+          $caption = preg_replace('/[^\p{Arabic}\da-z-]/ui', '', $caption);
+          if(!strstr(file_get_contents("data.txt"),"$caption")){
+            $file=fopen("data.txt","a");
+            fwrite($file,"\n$caption");
+            fclose($file);
+          }else{
+            var_dump(bot('deletemessage',[
+              "chat_id"=>$chat_id,
+              "message_id"=>$msg_id
+            ]));
+            $send = bot("sendmessage",[
+              "chat_id"=>$chat_id,
+              "text"=>"🔘  [$first_name عزیز](tg://user?id=$from_id)\n مطلب شما امروز یک بار در گروه قرار گرفته است لطفا از گذاشتن مطالب تکراری خودداری کنید\nدر صورت تکرار محبور به خداحافطی میشویم",
+              "parse_mode"=>"markdown",
+              "reply_markup"=>json_encode(["inline_keyboard"=>[[["text"=>"گروه های ناب مذهبی","url"=>"https://t.me/linkstm/4"]]]])
+            ])->result->message_id;
+            sleep(7);
+            var_dump(bot('deletemessage',[
+              "chat_id"=>$chat_id,
+              "message_id"=>$send
+            ]));
+          }
+        }
+      }elseif(preg_match("/[Tt].[Mm][Ee]/", $caption)){
+        if($adds < $addlink){
+          var_dump(bot('deletemessage',[
+            "chat_id"=>$chat_id,
+            "message_id"=>$msg_id
+          ]));
+          $send = bot("sendmessage",[
+            "chat_id"=>$sudo,
+            "text"=>"🔘 [$first_name $last_name $username](tg://user?id=$from_id) برای ارسال لینک باید $addlink نفر را به گروه دعوت کنی تعداد دعوت های شما\n$adds",
+            "parse_mode"=>"markdown",
+            "reply_markup"=>json_encode(["inline_keyboard"=>[[["text"=>"گروه های ناب مذهبی","url"=>"https://t.me/linkstm/4"]],[["text"=>"معاف","callback_data"=>"moftilinktk$from_id"]]]])
+          ])->result->message_id;
+          sleep(6);
+          var_dump(bot('deletemessage',[
+            "chat_id"=>$chat_id,
+            "message_id"=>$send
+          ]));
+        }else{
+          $caption = preg_replace('/[^\p{Arabic}\da-z-]/ui', '', $caption);
+          if(!strstr(file_get_contents("data.txt"),"$caption")){
+            $file=fopen("data.txt","a");
+            fwrite($file,"\n$caption");
+            fclose($file);
+          }else{
+            var_dump(bot('deletemessage',[
+              "chat_id"=>$chat_id,
+              "message_id"=>$msg_id
+            ]));
+            $send = bot("sendmessage",[
+              "chat_id"=>$chat_id,
+              "text"=>"🔘  [$first_name عزیز](tg://user?id=$from_id)\n مطلب شما امروز یک بار در گروه قرار گرفته است لطفا از گذاشتن مطالب تکراری خودداری کنید\nدر صورت تکرار محبور به خداحافطی میشویم",
+              "parse_mode"=>"markdown",
+              "reply_markup"=>json_encode(["inline_keyboard"=>[[["text"=>"گروه های ناب مذهبی","url"=>"https://t.me/linkstm/4"]]]])
+            ])->result->message_id;
+            sleep(7);
+            var_dump(bot('deletemessage',[
+              "chat_id"=>$chat_id,
+              "message_id"=>$send
+            ]));
+          }
+        }
+      }
+    }
+  }elseif($from_id == $admin){
+    $panel = json_decode(file_get_contents("panel.json"),true);
+    $text = $up->message->text;
+    $vaziat = $panel["vaziat"];
+    $addtextlink = $panel["textlink"];
+    $addcallback = $panel["callback"];
+    $addid = $panel["id"];
+    $addlink = $panel["link"];
+    $textad = $panel["text"];
+    $adforw = $panel["adforw"];
+    $edit = $panel["edit"];
+    $edit = str_replace('on','✅',$edit);
+      if($text == "/start" or $text == "پنل"){
+        var_dump(bot("sendmessage",[
+            "chat_id"=>$chat_id,
+            "text"=>"سلام ادمین با دکمه های زیر میتونی تنطیم کنی که برای هر پیام در گروه چند نفر را باید به گروه دعوت کنند\nبرای مثال روی دکمه متن ساده بزنید",
+            "parse_mode"=>"markdown",
+            "reply_markup"=>json_encode(["inline_keyboard"=>[[["text"=>"👇تنظیم تعداد ادد برای ارسال👇","callback_data"=>"help"],["text"=>"👇وضعیت فعلی ادد👇","callback_data"=>"help"]],[["text"=>"پیام ساده","callback_data"=>"text"],["text"=>"$textad","callback_data"=>"text"]],[["text"=>"فروارد","callback_data"=>"adforw"],["text"=>"$adforw","callback_data"=>"adforw"]],[["text"=>"لینک","callback_data"=>"link"],["text"=>"$addlink","callback_data"=>"link"]],[["text"=>"ایدی","callback_data"=>"id"],["text"=>"$addid","callback_data"=>"id"]],[["text"=>"متن لینک دار","callback_data"=>"textlink"],["text"=>"$addtextlink","callback_data"=>"textlink"]],[["text"=>"دکمه شیشه ای","callback_data"=>"callback"],["text"=>"$addcallback","callback_data"=>"callback"]],[["text"=>"قفل ویرایش پیام به عکس یا فیلم$edit","callback_data"=>"edit"]],[["text"=>"راهنما","url"=>"http://t.me/P1000"]]]])
+        ]));
+      }elseif($vaziat !== "empty"){
+        if(is_numeric($text)){
+            $panel["$vaziat"]=$text;
+            $panel["vaziat"]="empty";
+            var_dump(bot("sendmessage",[
+                "chat_id"=>$chat_id,
+                "text"=>"تعداد ادد به $text تغییر کرد",
+                "parse_mode"=>"markdown"
+            ]));
+            file_put_contents("panel.json",json_encode($panel));
+        }else{
+            var_dump(bot("sendmessage",[
+                "chat_id"=>$chat_id,
+                "text"=>"لطفا از اعداد انگلیسی (0123456789)",
+                "parse_mode"=>"markdown"
+            ]));
+        }
+      }
+  }else{
+    var_dump(bot("sendmessage",[
+      "chat_id"=>$chat_id,
+      "text"=>"گروه شما مجاز به استفاده از این ربات نمیباشد لطفا از ربات زیر استفاده کنید\n@khademgapbot",
+      "parse_mode"=>"markdown",
+      "reply_markup"=>json_encode(["inline_keyboard"=>[[["text"=>"کانال","url"=>"http://t.me/MB313"],["text"=>"گروه","url"=>"http://t.me/Marasem_m"],["text"=>"ادمین","url"=>"http://t.me/P1000"]],[["text"=>"ربات","url"=>"http://t.me/khademgapbot"]]]])
+    ]));
+  }
+}elseif(isset($up->edited_message)){
+  $chat_edit_id = $up->edited_message->chat->id;
+  if($chat_edit_id == $sudo){
+    $from_edit_id = $up->edited_message->from->id;
+    if($from_edit_id !== $admin){
+      $message_edit_id = $up->edited_message->message_id;
+      $panel = json_decode(file_get_contents("panel.json"),true);
+      $edit = $panel["edit"];
+      if($edit == "on" and (isset($up->edited_message->photo) or isset($up->edited_message->video))){
+        var_dump(bot('deletemessage',[
+          "chat_id"=>$sudo,
+          "message_id"=>$message_edit_id
+        ]));
+        $send = bot("sendmessage",[
+          "chat_id"=>$sudo,
+          "text"=>"🔘 [کاربر](tg://user?id=$from_edit_id)جهت امنیت گروه پیام هارا نمیتوان ویرایش به عکس و فیلم کرد لطفا دوباره مطلب خود را در گروه قرار دهید",
+          "parse_mode"=>"markdown",
+          "reply_markup"=>json_encode(["inline_keyboard"=>[[["text"=>"کانال اعلام مراسمات مشهد","url"=>"https://t.me/MB313"]],[["text"=>"خاموش کردن","callback_data"=>"edit"]]]])
+        ])->result->message_id;
+        sleep(8);
+        var_dump(bot('deletemessage',[
+          "chat_id"=>$chat_id,
+          "message_id"=>$send
+        ]));
+      }else{
+        $text = $up->edited_message->text;
+        $text = str_replace('@','t.me',$text);
+        $caption = $up->edited_message->caption;
+        $caption = str_replace('@','t.me',$caption);
+        if(preg_match("/[Tt].[Mm][Ee]/", $text) or preg_match("/[Tt].[Mm][Ee]/", $caption)){
+          $text = preg_replace('/[^\p{Arabic}\da-z-]/ui', '', $text);
+          $texcaptiont = preg_replace('/[^\p{Arabic}\da-z-]/ui', '', $caption);
+          if(!strstr(file_get_contents("data.txt"),"$caption") or !strstr(file_get_contents("data.txt"),"$text")){
+            $file=fopen("data.txt","a");
+            fwrite($file,"\n$text $caption");
+            fclose($file);
+          }else{
+            var_dump(bot('deletemessage',[
+              "chat_id"=>$sudo,
+              "message_id"=>$message_edit_id
+            ]));
+            $send = bot("sendmessage",[
+              "chat_id"=>$sudo,
+              "text"=>"🔘  [$first_name عزیز](tg://user?id=$from_edit_id)\n مطلب شما امروز یک بار در گروه قرار گرفته است لطفا از گذاشتن مطالب تکراری خودداری کنید\nدر صورت تکرار محبور به خداحافطی میشویم",
+              "parse_mode"=>"markdown",
+              "reply_markup"=>json_encode(["inline_keyboard"=>[[["text"=>"گروه های ناب مذهبی","url"=>"https://t.me/linkstm/4"]]]])
+            ])->result->message_id;
+            sleep(7);
+            var_dump(bot('deletemessage',[
+              "chat_id"=>$sudo,
+              "message_id"=>$send
+            ]));
+          }
+        }
+      }
+    }
+  }
+}elseif(isset($up->callback_query)){
+  $data=$up->callback_query->data;
+  $cl_msgid=$up->callback_query->message->message_id;
+  $cl_fromid=$up->callback_query->from->id;
+  if($cl_fromid == $admin){
+    $panel = json_decode(file_get_contents("panel.json"),true);
+    $addtextlink = $panel["textlink"];
+    $addcallback = $panel["callback"];
+    $addid = $panel["id"];
+    $addlink = $panel["link"];
+    $textad = $panel["text"];
+    $adforw = $panel["adforw"];
+    if(preg_match("/mofti1/", $data)){
+      $id = str_replace('mofti1','',$data);
+      $send = bot("sendmessage",[
+        "chat_id"=>$sudo,
+        "text"=>"🔘 [کاربر](tg://user?id=$id) شما معاف از وظیفه شدید",
+        "parse_mode"=>"markdown",
+        "reply_markup"=>json_encode(["inline_keyboard"=>[[["text"=>"گروه های ناب مذهبی","url"=>"https://t.me/linkstm/4"]]]])
+      ])->result->message_id;
+      file_put_contents("data/$id.txt",str_pad("\n",$textad,"\n"));
+      sleep(6);
+      var_dump(bot('deletemessage',[
+        "chat_id"=>$sudo,
+        "message_id"=>$send
+      ]));
+    }elseif(preg_match("/moftiforw/", $data)){
+      $id = str_replace('moftiforw','',$data);
+      $send = bot("sendmessage",[
+        "chat_id"=>$sudo,
+        "text"=>"🔘 [کاربر](tg://user?id=$id) شما معاف از وظیفه شدید",
+        "parse_mode"=>"markdown",
+        "reply_markup"=>json_encode(["inline_keyboard"=>[[["text"=>"گروه های ناب مذهبی","url"=>"https://t.me/linkstm/4"]]]])
+      ])->result->message_id;
+      file_put_contents("data/$id.txt",str_pad("\n",$adforw,"\n"));
+      sleep(6);
+      var_dump(bot('deletemessage',[
+        "chat_id"=>$sudo,
+        "message_id"=>$send
+      ]));
+    }elseif(preg_match("/moftilinktxt/", $data)){
+      $id = str_replace('moftilinktxt','',$data);
+      $send = bot("sendmessage",[
+        "chat_id"=>$sudo,
+        "text"=>"🔘 [کاربر](tg://user?id=$id) شما معاف از وظیفه شدید",
+        "parse_mode"=>"markdown",
+        "reply_markup"=>json_encode(["inline_keyboard"=>[[["text"=>"گروه های ناب مذهبی","url"=>"https://t.me/linkstm/4"]]]])
+      ])->result->message_id;
+      file_put_contents("data/$id.txt",str_pad("\n",$addtextlink,"\n"));
+      sleep(6);
+      var_dump(bot('deletemessage',[
+        "chat_id"=>$sudo,
+        "message_id"=>$send
+      ]));
+    }elseif(preg_match("/moftilinksh/", $data)){
+      $id = str_replace('moftilinksh','',$data);
+      $send = bot("sendmessage",[
+        "chat_id"=>$sudo,
+        "text"=>"🔘 [کاربر](tg://user?id=$id) شما معاف از وظیفه شدید",
+        "parse_mode"=>"markdown",
+        "reply_markup"=>json_encode(["inline_keyboard"=>[[["text"=>"گروه های ناب مذهبی","url"=>"https://t.me/linkstm/4"]]]])
+      ])->result->message_id;
+      file_put_contents("data/$id.txt",str_pad("\n",$addcallback,"\n"));
+      sleep(6);
+      var_dump(bot('deletemessage',[
+        "chat_id"=>$sudo,
+        "message_id"=>$send
+      ]));
+    }elseif(preg_match("/moftiads/", $data)){
+      $id = str_replace('moftiads','',$data);
+      $send = bot("sendmessage",[
+        "chat_id"=>$sudo,
+        "text"=>"🔘 [کاربر](tg://user?id=$id) شما معاف از وظیفه شدید",
+        "parse_mode"=>"markdown",
+        "reply_markup"=>json_encode(["inline_keyboard"=>[[["text"=>"گروه های ناب مذهبی","url"=>"https://t.me/linkstm/4"]]]])
+      ])->result->message_id;
+      file_put_contents("data/$id.txt",str_pad("\n",$addid,"\n"));
+      sleep(6);
+      var_dump(bot('deletemessage',[
+        "chat_id"=>$sudo,
+        "message_id"=>$send
+      ]));
+    }elseif(preg_match("/moftilinktk/", $data)){
+      $id = str_replace('moftilinktk','',$data);
+      $send = bot("sendmessage",[
+        "chat_id"=>$sudo,
+        "text"=>"🔘 [کاربر](tg://user?id=$id) شما معاف از وظیفه شدید",
+        "parse_mode"=>"markdown",
+        "reply_markup"=>json_encode(["inline_keyboard"=>[[["text"=>"گروه های ناب مذهبی","url"=>"https://t.me/linkstm/4"]]]])
+      ])->result->message_id;
+      file_put_contents("data/$id.txt",str_pad("\n",$addlink,"\n"));
+      sleep(6);
+      var_dump(bot('deletemessage',[
+        "chat_id"=>$sudo,
+        "message_id"=>$send
+      ]));
+    }elseif(preg_match("/remo/", $data)){
+      $id = str_replace('remo','',$data);
+      bot('restrictChatMember',[
+        'user_id'=>$id,
+        'chat_id'=>$sudo,
+        'can_post_messages'=>false
+      ]);
+      var_dump(bot("editMessageText",[
+        "chat_id"=>$admin,
+        "text"=>"🔘  [کاربر](tg://user?id=$id) 🔘  [توسط](tg://user?id=$cl_fromid) ریمو شد.",
+        "message_id"=>$cl_msgid,
+        "parse_mode"=>"markdown"
+      ]));
+    }elseif(preg_match("/velsh/", $data)){
+        $id = str_replace('velsh','',$data);
+        bot('restrictChatMember',[
+          'chat_id' => $sudo,
+          'user_id' => $id,
+          'can_send_messages' => TRUE
+        ]);
+        var_dump(bot("editMessageText",[
+          "chat_id"=>$admin,
+          "text"=>"🔘  [کاربر](tg://user?id=$id) 🔘  [توسط](tg://user?id=$cl_fromid) باز شد.",
+          "message_id"=>$cl_msgid,
+          "parse_mode"=>"markdown"
+        ]));
+    }elseif($data == "hors"){
+      var_dump(bot('deletemessage',[
+        "chat_id"=>$admin,
+        "message_id"=>$cl_msgid
+      ]));
+    }elseif($data == "edit"){
+      $panel = json_decode(file_get_contents("panel.json"),true);
+      $edit = $panel["edit"];
+      if($edit == "on"){
+        var_dump(bot("answerCallbackQuery",[
+          "callback_query_id"=>$up->callback_query->id,
+          "text"=>"قفل ویرایش متن خاموش شد ❌\nپیشنهاد ما روشن بودن این قابلیت است زیرا احتمال فیلتر شدن گروه میباشد",
+          "show_alert"=>true
+        ]));
+        $panel["edit"]="off";
+        $panel["vaziat"]="empty";
+        file_put_contents("panel.json",json_encode($panel));
+      }else{
+        var_dump(bot("answerCallbackQuery",[
+          "callback_query_id"=>$up->callback_query->id,
+          "text"=>"قفل ویرایش متن روشن شد ✅",
+          "show_alert"=>false
+        ]));
+        $panel["edit"]="on";
+        $panel["vaziat"]="empty";
+        file_put_contents("panel.json",json_encode($panel));
+      }
+    }elseif($data == "help"){
+      var_dump(bot("answerCallbackQuery",[
+        "callback_query_id"=>$up->callback_query->id,
+        "text"=>"از دکمه های زیر برای ویرایش تنظیمات ربات استفاده کنید\nبا زربه زدن بر روی دکمه شما میتوانید آن بخش را تغییر دهید",
+        "show_alert"=>true
+      ]));
+      $panel["vaziat"]="empty";
+      file_put_contents("panel.json",json_encode($panel));
+    }else{
+        $panel["vaziat"]="$data";
+        file_put_contents("panel.json",json_encode($panel));
+        var_dump(bot("sendmessage",[
+            "chat_id"=>$admin,
+            "text"=>"خب حال تعداد ادد را بصورت عدد وارد کنید",
+            "parse_mode"=>"markdown"
+        ]));
+    }
+  }else{
+    var_dump(bot("answerCallbackQuery",[
+      "callback_query_id"=>$up->callback_query->id,
+      "text"=>"برای معاف شدن باید تعدادی که گفته شد ادد بزنید\nاز گروه ناب دیدن کنید😍👇🏼\nhttps://t.me/marasem_m",
+      "show_alert"=>true
+    ]));
+  }
+}
+?>
